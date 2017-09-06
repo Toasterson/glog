@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-var stdLog = New(LOG_INFO, os.Stderr, "", log.LstdFlags)
+var stdLog = New(LOG_INFO, os.Stderr, "", log.LstdFlags, 3)
 
 func SetLevelFromString(level string) error{
 	return stdLog.SetLevelFromString(level)

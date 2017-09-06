@@ -25,15 +25,24 @@ const (
 )
 
 type Logger struct {
+	callDepth int
 	Level int
 	log   *log.Logger
 }
 
-func New(level int, output io.Writer, prefix string, flags int) *Logger {
-	return &Logger{
-		Level: level,
-		log:   log.New(output, prefix, flags),
+func New(level int, output io.Writer, prefix string, flags int, depth int) *Logger {
+	if depth == 0 {
+		depth = 2
 	}
+	return &Logger{
+		Level:     level,
+		log:       log.New(output, prefix, flags),
+		callDepth: depth,
+	}
+}
+
+func (l *Logger) SetCallDepth(depth int) {
+	l.callDepth = depth
 }
 
 func (l *Logger) SetLevelFromString(level string) error {
@@ -74,84 +83,84 @@ func (l *Logger) SetFlags(flags int) {
 
 func (l *Logger) Tracef(format string, v ...interface{}) {
 	if l.Level == LOG_TRACE {
-		l.log.Printf(format, v)
+		l.log.Output(l.callDepth, fmt.Sprintf(format, v...))
 	}
 }
 
 func (l *Logger) Traceln(v ...interface{}) {
 	if l.Level == LOG_TRACE {
-		l.log.Println(v)
+		l.log.Output(l.callDepth, fmt.Sprintln(v...))
 	}
 }
 
 func (l *Logger) Debugf(format string, v ...interface{}) {
 	if l.Level <= LOG_DEBUG {
-		l.log.Printf(format, v)
+		l.log.Output(l.callDepth, fmt.Sprintf(format, v...))
 	}
 }
 
 func (l *Logger) Debugln(v ...interface{}) {
 	if l.Level <= LOG_DEBUG {
-		l.log.Println(v)
+		l.log.Output(l.callDepth, fmt.Sprintln(v...))
 	}
 }
 
 func (l *Logger) Infof(format string, v ...interface{}) {
 	if l.Level <= LOG_INFO {
-		l.log.Printf(format, v)
+		l.log.Output(l.callDepth, fmt.Sprintf(format, v...))
 	}
 }
 
 func (l *Logger) Infoln(v ...interface{}) {
 	if l.Level <= LOG_INFO {
-		l.log.Println(v)
+		l.log.Output(l.callDepth, fmt.Sprintln(v...))
 	}
 }
 
 func (l *Logger) Warnf(format string, v ...interface{}) {
 	if l.Level <= LOG_WARN {
-		l.log.Printf(format, v)
+		l.log.Output(l.callDepth, fmt.Sprintf(format, v...))
 	}
 }
 
 func (l *Logger) Warnln(v ...interface{}) {
 	if l.Level <= LOG_WARN {
-		l.log.Println(v)
+		l.log.Output(l.callDepth, fmt.Sprintln(v...))
 	}
 }
 
 func (l *Logger) Errf(format string, v ...interface{}) {
 	if l.Level <= LOG_ERR {
-		l.log.Printf(format, v)
+		l.log.Output(l.callDepth, fmt.Sprintf(format, v...))
 	}
 }
 
 func (l *Logger) Errln(v ...interface{}) {
 	if l.Level <= LOG_ERR {
-		l.log.Println(v)
+		l.log.Output(l.callDepth, fmt.Sprintln(v...))
 	}
 }
 
 func (l *Logger) Emergf(format string, v ...interface{}) {
 	if l.Level <= LOG_EMERG {
-		l.log.Printf(format, v)
+		l.log.Output(l.callDepth, fmt.Sprintf(format, v...))
 	}
 }
 
 func (l *Logger) Emergln(v ...interface{}) {
 	if l.Level <= LOG_EMERG {
-		l.log.Println(v)
+		l.log.Output(l.callDepth, fmt.Sprintln(v...))
 	}
 }
 
 func (l *Logger) Critf(format string, v ...interface{}) {
 	if l.Level <= LOG_CRIT {
-		l.log.Printf(format, v)
+		l.log.Output(l.callDepth, fmt.Sprintf(format, v...))
 	}
 }
 
 func (l *Logger) Critln(v ...interface{}) {
 	if l.Level <= LOG_CRIT {
-		l.log.Println(v)
+		l.log.Output(l.callDepth, fmt.Sprintln(v...))
 	}
 }
